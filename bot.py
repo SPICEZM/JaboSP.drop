@@ -11,7 +11,7 @@ MANAGER_USERNAME = "spaysikzm"
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# --- КЛАВИАТУРЫ ---
+# --- КЛАВИАТУРЫ (С ОБНОВЛЕННЫМИ ЦЕНАМИ) ---
 def main_menu_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="📂 Каталог ботов и цены", callback_data="catalog")],
@@ -20,9 +20,9 @@ def main_menu_kb():
 
 def catalog_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🤖 Бот-визитка / Портфолио — от 1 500 ₽", callback_data="item_card")],
-        [InlineKeyboardButton(text="🛒 Магазин с автооплатой — от 4 000 ₽", callback_data="item_shop")],
-        [InlineKeyboardButton(text="🎮 Игровой / Развлекательный бот — от 3 000 ₽", callback_data="item_game")],
+        [InlineKeyboardButton(text="🤖 Бот-визитка / Портфолио — от 300 ₽", callback_data="item_card")],
+        [InlineKeyboardButton(text="🛒 Магазин с автооплатой — от 300 ₽", callback_data="item_shop")],
+        [InlineKeyboardButton(text="🎮 Игровой / Развлекательный бот — от 300 ₽", callback_data="item_game")],
         [InlineKeyboardButton(text="⬅️ Назад в меню", callback_data="back_home")]
     ])
 
@@ -35,7 +35,6 @@ def back_to_catalog_kb():
 # --- ОБРАБОТЧИКИ ---
 @dp.message(CommandStart())
 async def cmd_start(message: Message):
-    # Попытка удалить старое сообщение пользователя (/start), чтобы не засорять чат
     try:
         await message.delete()
     except Exception:
@@ -63,7 +62,7 @@ async def show_catalog(call: CallbackQuery):
 async def item_card_info(call: CallbackQuery):
     await call.message.edit_text(
         "🤖 **Бот-визитка / Портфолио**\n"
-        "💰 **Цена:** от 1 500 ₽\n"
+        "💰 **Цена:** от 300 ₽\n"
         "⏱ **Сроки:** 1–2 дня\n\n"
         "Идеально для фрилансеров и авторов. Включает интерактивное меню, ответы на частые вопросы, прайс-лист и прямую связь с клиентом.",
         reply_markup=back_to_catalog_kb(),
@@ -75,8 +74,8 @@ async def item_card_info(call: CallbackQuery):
 async def item_shop_info(call: CallbackQuery):
     await call.message.edit_text(
         "🛒 **Telegram-магазин с корзиной**\n"
-        "💰 **Цена:** от 4 000 ₽\n"
-        "⏱ **Сроки:** 3–5 дней\n\n"
+        "💰 **Цена:** от 300 ₽\n"
+        "⏱ **Сроки:** 2–4 дня\n\n"
         "Полноценный каталог товаров, админ-панель для добавления позиций, выдача цифровых товаров и подключение оплаты (СБП, карты, крипта).",
         reply_markup=back_to_catalog_kb(),
         parse_mode="Markdown"
@@ -87,7 +86,7 @@ async def item_shop_info(call: CallbackQuery):
 async def item_game_info(call: CallbackQuery):
     await call.message.edit_text(
         "🎮 **Игровой / Чат-бот**\n"
-        "💰 **Цена:** от 3 000 ₽\n"
+        "💰 **Цена:** от 300 ₽\n"
         "⏱ **Сроки:** от 2 дней\n\n"
         "Боты для бесед, мини-игры, генераторы контента, привязка к игровым серверам и нестандартная механика под твоё ТЗ.",
         reply_markup=back_to_catalog_kb(),
