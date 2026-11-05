@@ -11,7 +11,7 @@ MANAGER_USERNAME = "spaysikzm"
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# --- КЛАВИАТУРЫ (С ОБНОВЛЕННЫМИ ЦЕНАМИ) ---
+# --- КЛАВИАТУРЫ ---
 def main_menu_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="📂 Каталог ботов и цены", callback_data="catalog")],
