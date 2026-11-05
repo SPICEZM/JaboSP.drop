@@ -5,10 +5,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiohttp import web
 
-# Токен подтягивается из настроек Render (Environment Variables)
-TOKEN = os.getenv("BOT_TOKEN", "ВСТАВЬ_ТОКЕН_ЕСЛИ_ТЕСТИРУЕШЬ_ЛОКАЛЬНО")
-
-# Твой юзернейм в Telegram без собачки @ (для кнопки заказа)
+TOKEN = os.getenv("BOT_TOKEN")
 MANAGER_USERNAME = "spaysikzm"
 
 bot = Bot(token=TOKEN)
@@ -35,9 +32,15 @@ def back_to_catalog_kb():
         [InlineKeyboardButton(text="⬅️ Назад к каталогу", callback_data="catalog")]
     ])
 
-# --- ОБРАБОТЧИКИ КОМАНД И КНОПОК ---
+# --- ОБРАБОТЧИКИ ---
 @dp.message(CommandStart())
 async def cmd_start(message: Message):
+    # Попытка удалить старое сообщение пользователя (/start), чтобы не засорять чат
+    try:
+        await message.delete()
+    except Exception:
+        pass
+
     await message.answer(
         "👋 **Привет! Добро пожаловать в Магазин Ботов.**\n\n"
         "Я разрабатываю быстрых и удобных Telegram-ботов под ключ: от простых визиток до магазинов и игровых систем.\n\n"
@@ -54,6 +57,7 @@ async def show_catalog(call: CallbackQuery):
         reply_markup=catalog_kb(),
         parse_mode="Markdown"
     )
+    await call.answer()
 
 @dp.callback_query(F.data == "item_card")
 async def item_card_info(call: CallbackQuery):
@@ -65,6 +69,7 @@ async def item_card_info(call: CallbackQuery):
         reply_markup=back_to_catalog_kb(),
         parse_mode="Markdown"
     )
+    await call.answer()
 
 @dp.callback_query(F.data == "item_shop")
 async def item_shop_info(call: CallbackQuery):
@@ -76,6 +81,7 @@ async def item_shop_info(call: CallbackQuery):
         reply_markup=back_to_catalog_kb(),
         parse_mode="Markdown"
     )
+    await call.answer()
 
 @dp.callback_query(F.data == "item_game")
 async def item_game_info(call: CallbackQuery):
@@ -87,6 +93,7 @@ async def item_game_info(call: CallbackQuery):
         reply_markup=back_to_catalog_kb(),
         parse_mode="Markdown"
     )
+    await call.answer()
 
 @dp.callback_query(F.data == "back_home")
 async def go_home(call: CallbackQuery):
@@ -96,8 +103,9 @@ async def go_home(call: CallbackQuery):
         reply_markup=main_menu_kb(),
         parse_mode="Markdown"
     )
+    await call.answer()
 
-# --- ВЕБ-СЕРВЕР ДЛЯ RENDER (ЧТОБЫ НЕ ПАДАЛ ПО ТАЙМАУТУ ПОРТА) ---
+# --- ВЕБ-СЕРВЕР ДЛЯ RENDER ---
 async def handle_ping(request):
     return web.Response(text="Bot is running!")
 
@@ -110,7 +118,6 @@ async def start_web_server():
     site = web.TCPSite(runner, "0.0.0.0", port)
     await site.start()
 
-# --- ЗАПУСК ---
 async def main():
     await start_web_server()
     await bot.delete_webhook(drop_pending_updates=True)
